@@ -3,6 +3,7 @@ package com.autodidacta.identityservice.service;
 import com.autodidacta.identityservice.dto.*;
 import com.autodidacta.identityservice.entity.Role;
 import com.autodidacta.identityservice.entity.User;
+import com.autodidacta.identityservice.mapper.UserMapper;
 import com.autodidacta.identityservice.repository.UserRepository;
 import com.autodidacta.identityservice.shared.exceptions.EmailAlreadyExistsException;
 import com.autodidacta.identityservice.shared.exceptions.InvalidCredentialsException;
@@ -16,13 +17,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -51,13 +52,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User savedUser = userRepository.save(user);
 
-        return new RegisterResponse(
-                savedUser.getUserId(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail(),
-                savedUser.getPhoneNumber()
-        );
+        // return new RegisterResponse(
+        // savedUser.getUserId(),
+        // savedUser.getFirstName(),
+        // savedUser.getLastName(),
+        // savedUser.getEmail(),
+        // savedUser.getPhoneNumber());
+
+        return userMapper.registerToResponse(savedUser);
     }
 
     @Override
@@ -82,13 +84,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User savedUser = userRepository.save(user);
 
-        return new RegisterResponse(
-                savedUser.getUserId(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail(),
-                savedUser.getPhoneNumber()
-        );
+        // return new RegisterResponse(
+        // savedUser.getUserId(),
+        // savedUser.getFirstName(),
+        // savedUser.getLastName(),
+        // savedUser.getEmail(),
+        // savedUser.getPhoneNumber());
+
+        return userMapper.registerToResponse(savedUser);
     }
 
     @Override
@@ -96,12 +99,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user;
 
         if (loginRequest.identifier().contains("@")) {
-            user = userRepository.findByEmail(loginRequest.identifier()).orElseThrow(() -> new UserNotFoundException("User not found"));
+            user = userRepository.findByEmail(loginRequest.identifier())
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
         } else {
-            user = userRepository.findByPhoneNumber(loginRequest.identifier()).orElseThrow(() -> new UserNotFoundException("User not found"));
+            user = userRepository.findByPhoneNumber(loginRequest.identifier())
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
         }
 
-        if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
@@ -112,21 +117,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole()
-        );
+                user.getRole());
     }
 
     @Override
     public UserResponse findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return new UserResponse(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getRole(),
-                user.getEmail(),
-                user.getPhoneNumber()
-        );
+        // return new UserResponse(
+        // user.getUserId(),
+        // user.getFirstName(),
+        // user.getLastName(),
+        // user.getRole(),
+        // user.getEmail(),
+        // user.getPhoneNumber());
+
+        return userMapper.userToResponse(user);
     }
 
     @Override
