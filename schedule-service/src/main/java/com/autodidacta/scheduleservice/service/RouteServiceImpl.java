@@ -17,7 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService{
     private final RouteRepository routeRepository;
-    private final StopRepository stopRepository;
 
     @Override
     public RouteResponse createRoute(RouteRequest routeRequest) {
@@ -56,7 +55,9 @@ public class RouteServiceImpl implements RouteService{
                 route.getDestination(),
                 route.getPrice(),
                 route.getStops().stream()
-                        .map(stop -> new StopResponse(stop.getStopId(), stop.getName()))
+                        .map(stop -> new StopResponse(
+                                stop.getStopId(), stop.getName()
+                        ))
                         .toList()
         );
     }

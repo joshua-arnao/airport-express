@@ -1,4 +1,4 @@
-package com.autodidacta.scheduleservice.exceptions;
+package com.autodidacta.scheduleservice.shared.exceptions;
 
 public class InsufficientSeatsException extends RuntimeException {
     public InsufficientSeatsException(String message) {

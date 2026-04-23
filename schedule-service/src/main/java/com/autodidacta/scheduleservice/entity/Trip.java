@@ -1,6 +1,6 @@
 package com.autodidacta.scheduleservice.entity;
 
-import com.autodidacta.scheduleservice.exceptions.InsufficientSeatsException;
+import com.autodidacta.scheduleservice.shared.exceptions.InsufficientSeatsException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
