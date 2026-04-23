@@ -8,6 +8,8 @@ import org.springframework.data.auditing.config.AuditingConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -45,4 +47,12 @@ public class Route {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
+
+    @ManyToMany
+    @JoinTable(
+            name = "airport_express_route_stops",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
+    private List<Stop> stops = new ArrayList<>();
 }

@@ -25,10 +25,6 @@ public class Stop {
     @Column(nullable = false)
     private UUID stopId;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id", nullable = false)
-    private Route route;
-
     @Column(nullable = false)
     private String name;
 
@@ -39,7 +35,4 @@ public class Stop {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
-
-
-
 }
