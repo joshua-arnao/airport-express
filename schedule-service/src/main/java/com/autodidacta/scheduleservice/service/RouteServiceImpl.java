@@ -4,9 +4,7 @@ import com.autodidacta.scheduleservice.dto.RouteRequest;
 import com.autodidacta.scheduleservice.dto.RouteResponse;
 import com.autodidacta.scheduleservice.dto.StopResponse;
 import com.autodidacta.scheduleservice.entity.Route;
-import com.autodidacta.scheduleservice.entity.Stop;
 import com.autodidacta.scheduleservice.repository.RouteRepository;
-import com.autodidacta.scheduleservice.repository.StopRepository;
 import com.autodidacta.scheduleservice.shared.exceptions.RouteNameAlreadyExistsException;
 import com.autodidacta.scheduleservice.shared.exceptions.RouteNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
