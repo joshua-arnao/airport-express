@@ -82,29 +82,8 @@ public class TripServiceImpl implements TripService {
         List<Trip> trips = tripRepository.findByDate(date);
 
         return trips.stream()
-                .map(trip -> new TripResponse(
-                        trip.getTripId(),
-                        new ScheduleResponse(
-                                trip.getSchedule().getScheduleId(),
-                                new RouteResponse(
-                                        trip.getSchedule().getRoute().getRouteId(),
-                                        trip.getSchedule().getRoute().getName(),
-                                        trip.getSchedule().getRoute().getOrigin(),
-                                        trip.getSchedule().getRoute().getDestination(),
-                                        trip.getSchedule().getRoute().getPrice(),
-                                        trip.getSchedule().getRoute().getStops()
-                                                .stream()
-                                                .map(stop -> new StopResponse(stop.getStopId(), stop.getName()))
-                                                .toList()
-                                ),
-                                trip.getSchedule().getArrivalTime(),
-                                trip.getSchedule().getDepartureTime()
-                        ),
-                        trip.getDate(),
-                        trip.getCapacity(),
-                        BUS_CAPACITY - trip.getBookedSeats(),
-                        trip.getStatus()
-                ))
+                .map(this::toTripResponse)
+//              .map(trip -> toTripResponse(trip))
                 .toList();
     }
 
@@ -115,6 +94,11 @@ public class TripServiceImpl implements TripService {
 
         Trip tripSaved = tripRepository.save(trip);
 
+        return toTripResponse(tripSaved);
+    }
+
+    private TripResponse toTripResponse(Trip trip) {
+        Trip tripSaved = tripRepository.save(trip);
         return new TripResponse(
                 tripSaved.getTripId(),
                 new ScheduleResponse(
