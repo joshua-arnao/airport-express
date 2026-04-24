@@ -12,5 +12,7 @@ public interface TripService {
 
     List<TripResponse> getTripForDate(LocalDate date);
 
+    List<TripResponse> getAvailableTripsByDate(LocalDate date);
+
     TripResponse bookSeats(UUID tripId, Integer quantity);
 }

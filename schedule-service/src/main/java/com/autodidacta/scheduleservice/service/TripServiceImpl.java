@@ -88,6 +88,14 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<TripResponse> getAvailableTripsByDate(LocalDate date) {
+        return tripRepository.findByDateAndStatus(date, TripStatus.SCHEDULED)
+                .stream()
+                .map(this::toTripResponse)
+                .toList();
+    }
+
+    @Override
     public TripResponse bookSeats(UUID tripId, Integer quantity) {
         Trip trip =  tripRepository.findById(tripId).orElseThrow(() -> new TripNotFoundException("Trip not found"));
         trip.bookSeat(quantity);
