@@ -81,26 +81,39 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> schedules = scheduleRepository.findAll();
 
         return schedules.stream()
-                .map(schedule ->
-
-                        new ScheduleResponse(
-                                schedule.getScheduleId(),
-                                new RouteResponse(
-                                        schedule.getRoute().getRouteId(),
-                                        schedule.getRoute().getName(),
-                                        schedule.getRoute().getOrigin(),
-                                        schedule.getRoute().getDestination(),
-                                        schedule.getRoute().getPrice(),
-                                        schedule.getRoute().getStops()
-                                                .stream()
-                                                .map(stop -> new StopResponse(
-                                                        stop.getStopId(), stop.getName()
-                                                ))
-                                                .toList()
-                                ),
-                                schedule.getDepartureTime(),
-                                schedule.getArrivalTime()
-                        ))
+//                .map(schedule -> toScheduleResponse(schedule))
+                .map(this::toScheduleResponse)
                 .toList();
+    }
+
+    @Override
+    public List<ScheduleResponse> getSchedulesByRouteId(UUID routeId) {
+        List<Schedule> schedules = scheduleRepository.findByRoute_RouteId(routeId);
+
+        return schedules.stream()
+//                .map(schedule -> toScheduleResponse(schedule))
+                .map(this::toScheduleResponse)
+                .toList();
+    }
+
+    private ScheduleResponse toScheduleResponse(Schedule schedule) {
+        return new ScheduleResponse(
+                schedule.getScheduleId(),
+                new RouteResponse(
+                        schedule.getRoute().getRouteId(),
+                        schedule.getRoute().getName(),
+                        schedule.getRoute().getOrigin(),
+                        schedule.getRoute().getDestination(),
+                        schedule.getRoute().getPrice(),
+                        schedule.getRoute().getStops()
+                                .stream()
+                                .map(stop -> new StopResponse(
+                                        stop.getStopId(), stop.getName()
+                                ))
+                                .toList()
+                ),
+                schedule.getDepartureTime(),
+                schedule.getArrivalTime()
+        );
     }
 }

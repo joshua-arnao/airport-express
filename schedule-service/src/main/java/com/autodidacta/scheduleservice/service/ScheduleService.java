@@ -12,4 +12,6 @@ public interface ScheduleService {
     ScheduleResponse getScheduleId(UUID scheduleId);
 
     List<ScheduleResponse> getAllSchedule();
+
+    List<ScheduleResponse> getSchedulesByRouteId(UUID routeId);
 }

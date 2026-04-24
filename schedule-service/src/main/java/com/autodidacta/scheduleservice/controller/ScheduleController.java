@@ -30,4 +30,9 @@ public class ScheduleController {
     public List<ScheduleResponse> getAllSchedule() {
         return scheduleService.getAllSchedule();
     }
+
+    @GetMapping("/route/{routeId}")
+    public List<ScheduleResponse> getSchedulesByRouteId (@PathVariable UUID routeId) {
+        return scheduleService.getSchedulesByRouteId(routeId);
+    }
 }
