@@ -9,6 +9,7 @@ import com.autodidacta.scheduleservice.repository.ScheduleRepository;
 import com.autodidacta.scheduleservice.repository.TripRepository;
 import com.autodidacta.scheduleservice.shared.exceptions.ScheduleNotFoundException;
 import com.autodidacta.scheduleservice.shared.exceptions.TripAlreadyExistsException;
+import com.autodidacta.scheduleservice.shared.exceptions.TripNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -78,11 +79,64 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<TripResponse> getTripForDate(LocalDate date) {
-        return List.of();
+        List<Trip> trips = tripRepository.findByDate(date);
+
+        return trips.stream()
+                .map(trip -> new TripResponse(
+                        trip.getTripId(),
+                        new ScheduleResponse(
+                                trip.getSchedule().getScheduleId(),
+                                new RouteResponse(
+                                        trip.getSchedule().getRoute().getRouteId(),
+                                        trip.getSchedule().getRoute().getName(),
+                                        trip.getSchedule().getRoute().getOrigin(),
+                                        trip.getSchedule().getRoute().getDestination(),
+                                        trip.getSchedule().getRoute().getPrice(),
+                                        trip.getSchedule().getRoute().getStops()
+                                                .stream()
+                                                .map(stop -> new StopResponse(stop.getStopId(), stop.getName()))
+                                                .toList()
+                                ),
+                                trip.getSchedule().getArrivalTime(),
+                                trip.getSchedule().getDepartureTime()
+                        ),
+                        trip.getDate(),
+                        trip.getCapacity(),
+                        BUS_CAPACITY - trip.getBookedSeats(),
+                        trip.getStatus()
+                ))
+                .toList();
     }
 
     @Override
     public TripResponse bookSeats(UUID tripId, Integer quantity) {
-        return null;
+        Trip trip =  tripRepository.findById(tripId).orElseThrow(() -> new TripNotFoundException("Trip not found"));
+        trip.bookSeat(quantity);
+
+        Trip tripSaved = tripRepository.save(trip);
+
+        return new TripResponse(
+                tripSaved.getTripId(),
+                new ScheduleResponse(
+                        tripSaved.getSchedule().getScheduleId(),
+                        new RouteResponse(
+                                tripSaved.getSchedule().getRoute().getRouteId(),
+                                tripSaved.getSchedule().getRoute().getName(),
+                                tripSaved.getSchedule().getRoute().getOrigin(),
+                                tripSaved.getSchedule().getRoute().getDestination(),
+                                tripSaved.getSchedule().getRoute().getPrice(),
+                                tripSaved.getSchedule().getRoute().getStops()
+                                        .stream()
+                                        .map(stop -> new StopResponse(stop.getStopId(), stop.getName()))
+                                        .toList()
+                        ),
+                        tripSaved.getSchedule().getArrivalTime(),
+                        tripSaved.getSchedule().getDepartureTime()
+                ),
+                tripSaved.getDate(),
+                tripSaved.getCapacity(),
+                BUS_CAPACITY - tripSaved.getBookedSeats(),
+                tripSaved.getStatus()
+        );
     }
 }
