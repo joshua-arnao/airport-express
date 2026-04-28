@@ -6,9 +6,14 @@ import com.autodidacta.bookingservice.entity.*;
 import com.autodidacta.bookingservice.repository.BookingRepository;
 import com.autodidacta.bookingservice.repository.PassengerRepository;
 import com.autodidacta.bookingservice.repository.TicketRepository;
+import com.autodidacta.bookingservice.shared.exceptions.BookingNotFoundException;
+import com.autodidacta.bookingservice.shared.exceptions.PassengerNotFoundException;
+import com.autodidacta.bookingservice.shared.exceptions.TicketNotFoundException;
 import com.autodidacta.bookingservice.shared.exceptions.TripNotAvailableException;
 import com.autodidacta.scheduleservice.entity.TripStatus;
+import com.autodidacta.scheduleservice.repository.TripRepository;
 import com.autodidacta.scheduleservice.shared.exceptions.InsufficientSeatsException;
+import com.autodidacta.scheduleservice.shared.exceptions.TripNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ScheduleClient scheduleClient;
     private final TicketRepository ticketRepository;
@@ -48,85 +53,121 @@ public class BookingServiceImpl implements BookingService{
 
         Booking bookingSaved = bookingRepository.save(booking);
 
-        List<TicketResponse> ticketResponses = bookingRequest.passengersRequest().stream()
-                .map(passengerRequest -> {
-                    Ticket ticket = Ticket.builder()
-                            .bookingId(bookingSaved.getBookingId())
-                            .qrToken(UUID.randomUUID().toString())
-                            .ticketStatus(TicketStatus.ACTIVE)
-                            .build();
-                    Ticket savedTicket = ticketRepository.save(ticket);
+        bookingRequest.passengersRequest().forEach(passengerRequest -> {
+            Ticket ticket = Ticket.builder()
+                    .bookingId(bookingSaved.getBookingId())
+                    .qrToken(UUID.randomUUID().toString())
+                    .ticketStatus(TicketStatus.ACTIVE)
+                    .build();
+            Ticket savedTicket = ticketRepository.save(ticket);
 
-                    Passenger passenger = Passenger.builder()
-                            .ticketId(savedTicket.getTicketId())
-                            .firstName(passengerRequest.firstName())
-                            .lastName(passengerRequest.lastName())
-                            .documentType(passengerRequest.documentType())
-                            .documentNumber(passengerRequest.documentNumber())
-                            .email(passengerRequest.email())
-                            .hasBaggage(passengerRequest.hasBaggage())
-                            .build();
-                    passengerRepository.save(passenger);
+            Passenger passenger = Passenger.builder()
+                    .ticketId(savedTicket.getTicketId())
+                    .firstName(passengerRequest.firstName())
+                    .lastName(passengerRequest.lastName())
+                    .documentType(passengerRequest.documentType())
+                    .documentNumber(passengerRequest.documentNumber())
+                    .email(passengerRequest.email())
+                    .hasBaggage(passengerRequest.hasBaggage())
+                    .build();
+            passengerRepository.save(passenger);
+        });
 
-                    return new TicketResponse(
-                            savedTicket.getTicketId(),
-                            savedTicket.getBookingId(),
-                            savedTicket.getQrToken(),
-                            savedTicket.getTicketStatus()
-                    );
-                })
-                .toList();
-
-
-        List<PassengerResponse> passengerResponses = passengerRepository
-                .findAllByTicketIdIn(ticketResponses.stream()
-                        .map(TicketResponse::ticketId)
-                        .toList())
-                .stream()
-                .map(p -> new PassengerResponse(
-                        p.getPassengerId(),
-                        p.getTicketId(),
-                        p.getFirstName(),
-                        p.getLastName(),
-                        p.getDocumentType(),
-                        p.getDocumentNumber(),
-                        p.getEmail(),
-                        p.getHasBaggage()
-                ))
-                .toList();
-
-        return new BookingResponse(
-                bookingSaved.getBookingId(),
-                bookingSaved.getTotalAmount(),
-                bookingSaved.getBookingStatus(),
-                bookingSaved.getStripePaymentId(),
-                passengerResponses,
-                ticketResponses
-        );
+        return toBookingResponse(bookingSaved);
     }
 
     @Override
     public BookingResponse getBookingById(UUID bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not Found"));
+
+        return toBookingResponse(booking);
     }
 
     @Override
     public BookingResponse confirmBooking(UUID bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+        booking.confirm();
+
+        bookingRepository.save(booking);
+
+        return toBookingResponse(booking);
     }
 
     @Override
     public BookingResponse cancelBooking(UUID bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+        booking.cancel();
+
+        bookingRepository.save(booking);
+
+        return toBookingResponse(booking);
     }
 
     @Override
-    public List<BookingResponse> getBookingsByTripId(UUID bookingId) {
-        return List.of();
+    public List<BookingResponse> getBookingsByTripId(UUID tripId) {
+        List<Booking> bookings = bookingRepository.findByTripId(tripId);
+
+        return bookings.stream()
+                .map(this::toBookingResponse)
+                .toList();
     }
 
     @Override
     public BookingResponse getBookingByEmailAndBookingId(String email, UUID bookingId) {
-        return null;
+        Passenger passenger = passengerRepository.findByEmail(email).orElseThrow(() -> new PassengerNotFoundException("Passenger not found"));
+        Ticket ticket =  ticketRepository.findByTicketId(passenger.getTicketId()).orElseThrow(() -> new TicketNotFoundException("Ticket not found"));
+
+        if (!ticket.getBookingId().equals(bookingId)) {
+            throw new BookingNotFoundException("Booking not found");
+        }
+
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+
+        return toBookingResponse(booking);
+    }
+
+    private PassengerResponse toPassengerResponse(Passenger passenger) {
+        return new PassengerResponse(
+                passenger.getPassengerId(),
+                passenger.getTicketId(),
+                passenger.getFirstName(),
+                passenger.getLastName(),
+                passenger.getDocumentType(),
+                passenger.getDocumentNumber(),
+                passenger.getEmail(),
+                passenger.getHasBaggage()
+        );
+    }
+
+    private TicketResponse toTicketResponse(Ticket ticket) {
+        return new TicketResponse(
+                ticket.getTicketId(),
+                ticket.getBookingId(),
+                ticket.getQrToken(),
+                ticket.getTicketStatus()
+        );
+    }
+
+    private BookingResponse toBookingResponse(Booking booking) {
+        List<Ticket> tickets = ticketRepository.findByBookingId(booking.getBookingId());
+        List<TicketResponse> ticketResponses = tickets.stream()
+                .map(this::toTicketResponse)
+                .toList();
+        List<PassengerResponse> passengerResponses = passengerRepository
+                .findAllByTicketIdIn(tickets.stream()
+                        .map(Ticket::getTicketId)
+                        .toList())
+                .stream()
+                .map(this::toPassengerResponse)
+                .toList();
+
+        return new BookingResponse(
+                booking.getBookingId(),
+                booking.getTotalAmount(),
+                booking.getBookingStatus(),
+                booking.getStripePaymentId(),
+                passengerResponses,
+                ticketResponses
+        );
     }
 }

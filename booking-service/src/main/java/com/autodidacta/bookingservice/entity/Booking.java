@@ -49,11 +49,11 @@ public class Booking {
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
-    public void confirm(BookingStatus bookingStatus) {
+    public void confirm() {
         this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
-    public void cancel(BookingStatus bookingStatus) {
+    public void cancel() {
         this.bookingStatus = BookingStatus.CANCELLED;
     }
 }

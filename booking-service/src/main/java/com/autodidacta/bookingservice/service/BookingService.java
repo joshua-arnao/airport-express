@@ -11,6 +11,6 @@ public interface BookingService {
     BookingResponse getBookingById(UUID bookingId);
     BookingResponse confirmBooking(UUID bookingId);
     BookingResponse cancelBooking(UUID bookingId);
-    List<BookingResponse> getBookingsByTripId(UUID bookingId);
+    List<BookingResponse> getBookingsByTripId(UUID tripId);
     BookingResponse getBookingByEmailAndBookingId(String email, UUID bookingId);
 }
