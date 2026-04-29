@@ -11,9 +11,7 @@ import com.autodidacta.bookingservice.shared.exceptions.PassengerNotFoundExcepti
 import com.autodidacta.bookingservice.shared.exceptions.TicketNotFoundException;
 import com.autodidacta.bookingservice.shared.exceptions.TripNotAvailableException;
 import com.autodidacta.scheduleservice.entity.TripStatus;
-import com.autodidacta.scheduleservice.repository.TripRepository;
 import com.autodidacta.scheduleservice.shared.exceptions.InsufficientSeatsException;
-import com.autodidacta.scheduleservice.shared.exceptions.TripNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
