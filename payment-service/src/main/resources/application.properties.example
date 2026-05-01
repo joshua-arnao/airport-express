@@ -1,0 +1,3 @@
+spring.application.name=payment-service
+stripe.secret.key=sk_test_tu_clave_aqui
+server.port=8084
