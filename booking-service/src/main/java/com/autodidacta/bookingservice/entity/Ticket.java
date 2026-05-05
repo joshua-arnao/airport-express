@@ -26,6 +26,7 @@ public class Ticket {
     @Column(nullable = false)
     private UUID bookingId;
 
+    @Setter
     @Column(nullable = false)
     private String qrToken;
 
