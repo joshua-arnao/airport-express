@@ -56,7 +56,17 @@ public class BoardingServiceImpl implements BoardingService{
 
     @Override
     public List<ScanResponse> getScanHistory(UUID ticketId) {
-        return List.of();
+        List<BoardingEvent> events = boardingEventRepository.findAllByTicketId(ticketId);
+        PassengerClientResponse passenger = passengerClient.getPassengerByTicketId(ticketId);
+
+        return events.stream()
+                .map(event -> new ScanResponse(
+                        event.getResultScanner().name(),
+                        passenger.firstName() + " " + passenger.lastName(),
+                        passenger.hasBaggage(),
+                        "History record at stop: " + event.getStopId()
+                ))
+                .toList();
     }
 
 }

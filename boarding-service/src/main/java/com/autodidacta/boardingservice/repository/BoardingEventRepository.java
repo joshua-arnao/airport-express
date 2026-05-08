@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface BoardingEventRepository extends JpaRepository<BoardingEvent, UUID> {
+    List <BoardingEvent> findAllByTicketId(UUID ticketId);
     List<BoardingEvent> findByTripId(UUID tripId);
     Optional <BoardingEvent> findByTicketId(UUID ticketId);
 }
