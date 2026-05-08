@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record BookingRequest(
         UUID tripId,
+        UUID stopId,
         List<PassengerRequest> passengersRequest
         ) {
 }

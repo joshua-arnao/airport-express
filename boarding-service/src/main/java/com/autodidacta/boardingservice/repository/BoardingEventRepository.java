@@ -1,7 +1,5 @@
 package com.autodidacta.boardingservice.repository;
 
-import com.autodidacta.boardingservice.dto.ScanRequest;
-import com.autodidacta.boardingservice.dto.ScanResponse;
 import com.autodidacta.boardingservice.entity.BoardingEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -26,6 +26,7 @@ public class BookingServiceImpl implements BookingService {
     private final ScheduleClient scheduleClient;
     private final TicketRepository ticketRepository;
     private final PassengerRepository passengerRepository;
+    private final QrService qrService;
 
     @Override
     public BookingResponse createBooking(BookingRequest bookingRequest) {
@@ -54,10 +55,18 @@ public class BookingServiceImpl implements BookingService {
         bookingRequest.passengersRequest().forEach(passengerRequest -> {
             Ticket ticket = Ticket.builder()
                     .bookingId(bookingSaved.getBookingId())
-                    .qrToken(UUID.randomUUID().toString())
                     .ticketStatus(TicketStatus.ACTIVE)
                     .build();
             Ticket savedTicket = ticketRepository.save(ticket);
+
+            String qrToken = qrService.generateQrToken(
+                    savedTicket.getTicketId(),
+                    bookingRequest.tripId(),
+                    bookingRequest.stopId()
+            );
+
+            savedTicket.setQrToken(qrToken);
+            ticketRepository.save(savedTicket);
 
             Passenger passenger = Passenger.builder()
                     .ticketId(savedTicket.getTicketId())

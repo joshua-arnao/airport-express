@@ -59,6 +59,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.airportexpress</groupId>
+            <artifactId>booking-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.12.3</version>

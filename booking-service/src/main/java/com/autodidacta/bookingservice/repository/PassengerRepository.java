@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PassengerRepository extends JpaRepository<Passenger, UUID> {
-    List<Passenger> findByTicketId(UUID ticketId);
+    Optional<Passenger> findByTicketId(UUID ticketId);
     Optional<Passenger> findByEmail(String email);
     List<Passenger> findAllByTicketIdIn(List<UUID> ticketIds);
 }
