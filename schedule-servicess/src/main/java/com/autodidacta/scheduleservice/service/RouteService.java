@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.autodidacta.scheduleservice.dto.RouteRequest;
 import com.autodidacta.scheduleservice.dto.RouteResponse;
+import com.autodidacta.scheduleservice.dto.StopRequest;
 
 public interface RouteService {
     RouteResponse createRoute(RouteRequest routeRequest);
@@ -12,4 +13,6 @@ public interface RouteService {
     RouteResponse getRouteId(UUID routeId);
 
     List<RouteResponse> getAllRoutes();
+
+    RouteResponse addStop(UUID routeId, StopRequest request);
 }

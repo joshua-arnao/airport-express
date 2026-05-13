@@ -2,9 +2,12 @@ package com.autodidacta.scheduleservice.service;
 
 import com.autodidacta.scheduleservice.dto.RouteRequest;
 import com.autodidacta.scheduleservice.dto.RouteResponse;
+import com.autodidacta.scheduleservice.dto.StopRequest;
 import com.autodidacta.scheduleservice.dto.StopResponse;
 import com.autodidacta.scheduleservice.entity.Route;
+import com.autodidacta.scheduleservice.entity.Stop;
 import com.autodidacta.scheduleservice.repository.RouteRepository;
+import com.autodidacta.scheduleservice.repository.StopRepository;
 import com.autodidacta.scheduleservice.shared.exceptions.RouteNameAlreadyExistsException;
 import com.autodidacta.scheduleservice.shared.exceptions.RouteNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService{
     private final RouteRepository routeRepository;
+    private final StopRepository stopRepository;
 
     @Override
     public RouteResponse createRoute(RouteRequest routeRequest) {
@@ -79,5 +83,35 @@ public class RouteServiceImpl implements RouteService{
                                     .toList()
                         ))
                 .toList();
+    }
+
+    @Override
+    public RouteResponse addStop(UUID routeId, StopRequest request) {
+        Route route = routeRepository.findById(routeId).orElseThrow(() -> new RouteNotFoundException("Route not found"));
+
+        Stop stop = Stop.builder()
+                .name(request.name())
+                .build();
+
+        stopRepository.save(stop);
+        route.getStops().add(stop);
+        routeRepository.save(route);
+
+        return toRouteResponse(route);
+    }
+
+    private RouteResponse toRouteResponse(Route route) {
+        List<StopResponse> stops = route.getStops().stream()
+                .map(stop -> new StopResponse(stop.getStopId(), stop.getName()))
+                .toList();
+
+        return new RouteResponse(
+                route.getRouteId(),
+                route.getName(),
+                route.getOrigin(),
+                route.getDestination(),
+                route.getPrice(),
+                stops
+        );
     }
 }

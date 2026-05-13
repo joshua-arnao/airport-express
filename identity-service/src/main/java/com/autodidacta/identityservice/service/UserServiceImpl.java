@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String hashedPassword = passwordEncoder.encode(registerRequest.password());
 
         User user = User.builder()
-                .firstName(registerRequest.firstname())
-                .lastName(registerRequest.lastname())
+                .firstName(registerRequest.firstName())
+                .lastName(registerRequest.lastName())
                 .documentType(registerRequest.documentType())
                 .documentNumber(registerRequest.documentNumber())
                 .email(registerRequest.email())
@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String hashedPassword = passwordEncoder.encode(registerRequest.password());
 
         User user = User.builder()
-                .firstName(registerRequest.firstname())
-                .lastName(registerRequest.lastname())
+                .firstName(registerRequest.firstName())
+                .lastName(registerRequest.lastName())
                 .documentType(registerRequest.documentType())
                 .documentNumber(registerRequest.documentNumber())
                 .email(registerRequest.email())

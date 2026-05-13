@@ -7,8 +7,8 @@ import java.util.UUID;
 public record LoginResponse(
         String token,
         UUID userId,
-        String firstname,
-        String lastname,
+        String firstName,
+        String lastName,
         Role role
 ) {
 }

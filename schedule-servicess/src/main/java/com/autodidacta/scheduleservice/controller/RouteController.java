@@ -2,6 +2,7 @@ package com.autodidacta.scheduleservice.controller;
 
 import com.autodidacta.scheduleservice.dto.RouteRequest;
 import com.autodidacta.scheduleservice.dto.RouteResponse;
+import com.autodidacta.scheduleservice.dto.StopRequest;
 import com.autodidacta.scheduleservice.service.RouteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,10 @@ public class RouteController {
     @GetMapping("/list")
     public List<RouteResponse> getAllRoutes() {
         return routeService.getAllRoutes();
+    }
+
+    @PostMapping("/{routeId}/stops")
+    public RouteResponse addStop(@PathVariable UUID routeId, @RequestBody StopRequest request) {
+        return routeService.addStop(routeId, request);
     }
 }

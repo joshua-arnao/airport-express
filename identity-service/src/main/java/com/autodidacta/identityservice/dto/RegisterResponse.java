@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public record RegisterResponse(
         UUID userId,
-        String firstname,
-        String lastname,
+        String firstName,
+        String lastName,
         String email,
         String phoneNumber
 ) {
