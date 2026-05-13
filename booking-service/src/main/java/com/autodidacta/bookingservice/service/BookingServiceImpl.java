@@ -6,12 +6,7 @@ import com.autodidacta.bookingservice.entity.*;
 import com.autodidacta.bookingservice.repository.BookingRepository;
 import com.autodidacta.bookingservice.repository.PassengerRepository;
 import com.autodidacta.bookingservice.repository.TicketRepository;
-import com.autodidacta.bookingservice.shared.exceptions.BookingNotFoundException;
-import com.autodidacta.bookingservice.shared.exceptions.PassengerNotFoundException;
-import com.autodidacta.bookingservice.shared.exceptions.TicketNotFoundException;
-import com.autodidacta.bookingservice.shared.exceptions.TripNotAvailableException;
-import com.autodidacta.scheduleservice.entity.TripStatus;
-import com.autodidacta.scheduleservice.shared.exceptions.InsufficientSeatsException;
+import com.autodidacta.bookingservice.shared.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +27,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse createBooking(BookingRequest bookingRequest) {
         TripClientResponse trip = scheduleClient.getTripById(bookingRequest.tripId());
 
-        if (!trip.status().equals(TripStatus.SCHEDULED)) {
+        if (!"SCHEDULED".equals(trip.status())) {
             throw new TripNotAvailableException("Trip is not available");
         }
 

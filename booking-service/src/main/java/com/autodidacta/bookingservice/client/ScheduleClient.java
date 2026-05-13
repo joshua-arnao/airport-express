@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "schedule-servicess")
+@FeignClient(name = "schedule-service")
 public interface ScheduleClient {
     @GetMapping("/api/trips/{tripId}")
     TripClientResponse getTripById(@PathVariable UUID tripId);
