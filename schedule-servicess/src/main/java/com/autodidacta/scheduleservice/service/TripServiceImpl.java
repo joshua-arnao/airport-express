@@ -73,7 +73,8 @@ public class TripServiceImpl implements TripService {
                 tripSaved.getDate(),
                 tripSaved.getCapacity(),
                 availableSeats,
-                tripSaved.getStatus()
+                tripSaved.getStatus(),
+                trip.getSchedule().getRoute().getPrice()
         );
     }
 
@@ -135,7 +136,8 @@ public class TripServiceImpl implements TripService {
                 tripSaved.getDate(),
                 tripSaved.getCapacity(),
                 BUS_CAPACITY - tripSaved.getBookedSeats(),
-                tripSaved.getStatus()
+                tripSaved.getStatus(),
+                tripSaved.getSchedule().getRoute().getPrice()
         );
     }
 }

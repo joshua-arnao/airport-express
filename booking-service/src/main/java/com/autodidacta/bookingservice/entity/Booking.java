@@ -29,7 +29,6 @@ public class Booking {
     @Column(nullable = false)
     private UUID tripId;
 
-    @Version
     private Long version;
 
     @Column(nullable = false)

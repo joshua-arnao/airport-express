@@ -18,8 +18,6 @@ import java.util.UUID;
 @Builder
 public class Ticket {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private UUID ticketId;
 
@@ -27,7 +25,7 @@ public class Ticket {
     private UUID bookingId;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String qrToken;
 
     @Enumerated(EnumType.STRING)

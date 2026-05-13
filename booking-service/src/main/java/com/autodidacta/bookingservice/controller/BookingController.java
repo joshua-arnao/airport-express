@@ -45,9 +45,4 @@ public class BookingController {
     public BookingResponse getBookingByEmailAndBookingId(@RequestParam String email, @RequestParam UUID bookingId) {
         return bookingService.getBookingByEmailAndBookingId(email, bookingId);
     }
-
-    @GetMapping("/{tripId}")
-    public TripResponse getTripById(@PathVariable UUID tripId) {
-        return tripService.getTripById(tripId);
-    }
 }

@@ -48,20 +48,22 @@ public class BookingServiceImpl implements BookingService {
         Booking bookingSaved = bookingRepository.save(booking);
 
         bookingRequest.passengersRequest().forEach(passengerRequest -> {
-            Ticket ticket = Ticket.builder()
-                    .bookingId(bookingSaved.getBookingId())
-                    .ticketStatus(TicketStatus.ACTIVE)
-                    .build();
-            Ticket savedTicket = ticketRepository.save(ticket);
+            UUID ticketId = UUID.randomUUID();
 
             String qrToken = qrService.generateQrToken(
-                    savedTicket.getTicketId(),
+                    ticketId,
                     bookingRequest.tripId(),
                     bookingRequest.stopId()
             );
 
-            savedTicket.setQrToken(qrToken);
-            ticketRepository.save(savedTicket);
+            Ticket ticket = Ticket.builder()
+                    .ticketId(ticketId)
+                    .bookingId(bookingSaved.getBookingId())
+                    .qrToken(qrToken)
+                    .ticketStatus(TicketStatus.ACTIVE)
+                    .build();
+
+            Ticket savedTicket = ticketRepository.save(ticket);
 
             Passenger passenger = Passenger.builder()
                     .ticketId(savedTicket.getTicketId())
