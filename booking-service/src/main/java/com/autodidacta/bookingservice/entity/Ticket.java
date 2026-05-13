@@ -37,4 +37,9 @@ public class Ticket {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    public void markAsUsed() {
+        this.ticketStatus = TicketStatus.USED;
+        this.usedAt = LocalDateTime.now();
+    }
 }

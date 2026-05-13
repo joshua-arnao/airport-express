@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.UUID;
 
-@FeignClient(name = "booking-service")
+@FeignClient(name = "ticket-client", url = "http://localhost:8083")
 public interface TicketClient {
     @GetMapping("/api/tickets/{ticketId}")
     TicketClientResponse getTicketById(@PathVariable UUID ticketId);
