@@ -36,4 +36,9 @@ public class TripController {
     public TripResponse bookSeats(@PathVariable UUID tripId, @RequestBody Integer quantity) {
         return tripService.bookSeats(tripId, quantity);
     }
+
+    @GetMapping("/{tripId}")
+    public TripResponse getTripById(@PathVariable UUID tripId) {
+        return tripService.getTripById(tripId);
+    }
 }

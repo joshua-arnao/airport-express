@@ -105,6 +105,13 @@ public class TripServiceImpl implements TripService {
         return toTripResponse(tripSaved);
     }
 
+    @Override
+    public TripResponse getTripById(UUID tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException("Trip not found"));
+        return toTripResponse(trip);
+    }
+
     private TripResponse toTripResponse(Trip trip) {
         Trip tripSaved = tripRepository.save(trip);
         return new TripResponse(
