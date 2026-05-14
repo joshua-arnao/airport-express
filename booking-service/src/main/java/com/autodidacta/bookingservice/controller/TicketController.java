@@ -26,8 +26,8 @@ public class TicketController {
         return ticketService.markAsUsed(ticketId);
     }
 
-    @GetMapping("/{ticketId}/passenger")
-    public PassengerResponse getPassengerByTicketId(@PathVariable UUID ticketId) {
-        return passengerService.getPassengerByTicketId(ticketId);
-    }
+@GetMapping("/{ticketId}/passenger")
+public PassengerResponse getPassengerByTicketId(@PathVariable UUID ticketId) {
+    return passengerService.getPassengerByTicketId(ticketId);
+}
 }
