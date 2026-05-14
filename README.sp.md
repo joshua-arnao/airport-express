@@ -1,4 +1,10 @@
-# Airport Express Lima — Plataforma Backend
+<p align="center">
+    <b>Seleccionar Lenguaje:</b><br>
+    <a href="README.md">🇺🇸 English</a> |
+    <a href="README.sp.md">🇪🇸 Español</a>
+</p>
+
+# Upgrade Airport Express Lima — Plataforma Backend
 
 Una plataforma de microservicios construida para resolver un problema real: el servicio de bus Airport Express Lima entre el Aeropuerto Internacional Jorge Chávez y Miraflores no tenía un sistema real de validación de tickets.
 
@@ -6,7 +12,7 @@ Una plataforma de microservicios construida para resolver un problema real: el s
 
 ## El Problema
 
-Al usar Airport Express Lima, el asistente de abordaje solo **tomaba una foto** del QR mostrado en la pantalla del pasajero — no había validación real. Esto generaba graves problemas operativos y de seguridad:
+Al usar el servicio Airport Express Lima, el asistente de abordaje solo **tomaba una foto** del QR mostrado en la pantalla del pasajero — no había validación real. Esto generaba graves problemas operativos y de seguridad:
 
 | Problema | Impacto |
 |---|---|
@@ -14,7 +20,6 @@ Al usar Airport Express Lima, el asistente de abordaje solo **tomaba una foto** 
 | Sin control de capacidad por viaje | El overbooking era posible |
 | Comprobante solo en web | Sin email de confirmación, sin wallet digital |
 | Validación manual con foto | Insegura e imprecisa |
-| Información de maletas expuesta en el QR | Riesgo de seguridad — datos personales visibles |
 | Sin tracking del bus en tiempo real | El pasajero no tenía forma de saber dónde estaba el bus |
 
 Este proyecto reemplaza ese proceso manual con una **plataforma de tickets de primer mundo**, inspirada en sistemas de Latam Airlines, Renfe (España) y JR Pass (Japón).

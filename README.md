@@ -1,4 +1,12 @@
-# Airport Express Lima — Backend Platform
+<p align="center">
+    <b>Select Language:</b><br>
+    <a href="README.md">🇺🇸 English</a> |
+    <a href="README.sp.md">🇪🇸 Español</a>
+</p>
+
+---
+
+# Upgrade Airport Express Lima — Backend Platform
 
 A real-world microservices platform built to solve a real problem: the Airport Express Lima bus service between Jorge Chávez International Airport and Miraflores had no real ticket validation system.
 
@@ -14,7 +22,6 @@ When using Airport Express Lima, the boarding assistant only **took a photo** of
 | No capacity control per trip | Overbooking was possible |
 | Boarding pass only on web | No email confirmation, no digital wallet |
 | Manual photo validation | Insecure and imprecise |
-| Baggage info exposed in QR | Security risk — personal data visible |
 | No real-time bus tracking | Passengers had no way to know where the bus was |
 
 This project replaces that manual process with a **first-world digital ticketing platform**, inspired by systems used by Latam Airlines, Renfe (Spain), and JR Pass (Japan).
